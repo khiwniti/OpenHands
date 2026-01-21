@@ -210,9 +210,13 @@ If the build fails:
 - Ensure all Python dependencies are in `pyproject.toml`
 - Check that Poetry is installing correctly in the Dockerfile
 
-**Port binding errors**
+**Port binding errors / "Invalid value for '--port': '$PORT' is not a valid integer"**
 - Railway automatically provides `$PORT` environment variable
-- The `railway.toml` uses `$PORT` in the start command
+- The `railway.toml` uses shell expansion (`sh -c`) to properly pass `$PORT` to uvicorn
+- If you customize the start command, ensure you wrap it in `sh -c` for variable expansion:
+  ```toml
+  startCommand = "sh -c 'uvicorn app:main --port ${PORT}'"
+  ```
 
 ### Application Not Responding
 

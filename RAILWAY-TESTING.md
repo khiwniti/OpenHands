@@ -238,6 +238,21 @@ railway logs --follow
 - Missing required environment variables
 - Runtime configuration errors
 
+### Issue: "Invalid value for '--port': '$PORT' is not a valid integer"
+
+**Problem:** The PORT variable isn't being expanded properly.
+
+**Solution:** This is already fixed in the `railway.toml`. If you see this error:
+
+1. Ensure your `railway.toml` has:
+   ```toml
+   startCommand = "sh -c 'uvicorn openhands.server.listen:app --host 0.0.0.0 --port ${PORT:-3000}'"
+   ```
+
+2. The key is wrapping the command in `sh -c` for shell variable expansion
+
+3. If using a custom start command, always use `sh -c` with `${PORT}` not `$PORT`
+
 ### Issue: "Cannot connect to Docker daemon"
 
 **Solution:** You're using Docker runtime on Railway (not supported)
